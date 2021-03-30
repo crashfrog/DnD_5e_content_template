@@ -1,5 +1,7 @@
-# DnD_5e_content_template
-A GitHub template for you to create your own repository for collaborative DnD 5e content.
+# DnD 5e Content Template
+A GitHub template for you to create your own repository for collaborative DnD 5e content. I'm a LaTeX dummy, so it's got some helpful features.
+
+It uses the [RPGTeX 5e Template.](https://github.com/rpgtex/DND-5e-LaTeX-Template)
 
 ## How to start a project
 
