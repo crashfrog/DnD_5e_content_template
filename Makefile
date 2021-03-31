@@ -1,58 +1,42 @@
 # Author:
-#      Wim Looman
-# Copyright:
-#      Copyright (c) 2010 Wim Looman
+#      Justin Payne
 # License:
 #      GNU General Public License (see http://www.gnu.org/licenses/gpl-3.0.txt)
 
 SHELL := /bin/bash
 
-## User interface, just set the main filename and it will do everything for you
-# If you have any extra code or images included list them in EXTRA_FILES
-# This should work as long as you have all the .tex, .sty and .bib files in
-# the same folder.
-MAINFILE = book
-EXTRA_FILES := $(shell echo "images/*") 
-
-## Inner workings
-OBJECTS = $(shell echo **.tex)
-STYLES = $(shell echo **.sty)
-BIB = $(shell echo **.bib)
-
-OBJECTS_TEST = $(addsuffix .t, $(basename $(OBJECTS)))
-STYLES_TEST = $(addsuffix .s, $(basename $(STYLES)))
-BIB_TEST = bib
-TESTS = $(addprefix make/, $(OBJECTS_TEST) $(STYLES_TEST) $(BIB_TEST))
-TEMP2 := $(shell mkdir make 2>/dev/null)
+MAINFILE = make/book.tex
 
 .PHONY: all
-all: $(MAINFILE).dvi $(MAINFILE).pdf
-
-$(MAINFILE).dvi: $(TESTS) $(EXTRA_FILES)
-	latex $(MAINFILE)
-	latex $(MAINFILE)
-
-$(MAINFILE).pdf: $(TESTS) $(EXTRA_FILES)
-	pdflatex $(MAINFILE)
-	pdflatex $(MAINFILE)
+all: _book
+	export TEXINPUTS=lib/templates/dnd/:
+	rubber --pdf $(MAINFILE)
 
 .PHONY: setup
 setup:
 	git submodule update --init --recursive
 
-make/%.t: %.tex
-	touch $@
+_book: book.tex
+	mkdir -p make
+	-rm -f $(MAINFILE)
+	@set -m; while read -r b; 														\
+	do                                												\
+		if [[ $$b != '% % %  '* ]] ;                 								\
+		then 																		\
+			echo "$$b" >> $(MAINFILE)  ;        									\
+		else 																		\
+			for f in $$(find chapters -iname 'chapter_*.tex' | sed 's/.tex//') ; 	\
+			do 																		\
+				echo "\include{$$f}" >> $(MAINFILE) ; 								\
+			done ; 																	\
+		fi ;                                         								\
+	done <book.tex
+			
 
-make/%.s: %.sty
-	touch $@
-
-make/bib: $(BIB)
-	latex $(MAINFILE)
-	bibtex $(MAINFILE)
-	touch $@
 
 .PHONY: clean
 clean:
+	rubber --clean $(MAINFILE)
 	-rm -f *.aux
 	-rm -f *.log
 	-rm -f *.toc
@@ -60,6 +44,7 @@ clean:
 	-rm -f *.blg
 	-rm -f *.out
 	-rm -f make/bib
+	-rm -f $(MAINFILE)
 
 .PHONY: cleanall
 cleanall: clean
