@@ -8,12 +8,12 @@ SHELL := /bin/bash
 MAINFILE = .build/book.tex
 
 .PHONY: all
-all: _book
+all: _book setup
 	TEXINPUTS=lib/templates/dnd/: rubber --pdf $(MAINFILE)
 
 .PHONY: setup
 setup:
-	git submodule update --init --recursive
+	@git submodule update --init --recursive
 
 _book: book.tex
 	mkdir -p .build
@@ -31,11 +31,15 @@ _book: book.tex
 		fi ;                                         								\
 	done <book.tex
 			
+watch:  ## Recompile on updates to the source file
+    @while [ 1 ]; do; inotifywait $(PAPER); sleep 0.01; make all; done
+    # for Bash users, replace the while loop with the following
+    # @while true; do; inotifywait $(PAPER); sleep 0.01; make all; done
 
 
 .PHONY: clean
 clean:
-	rubber --clean $(MAINFILE)
+	-rubber --clean $(MAINFILE)
 	-rm -f *.aux
 	-rm -f *.log
 	-rm -f *.toc
