@@ -13,6 +13,7 @@
 .*.lb
 
 ## Intermediate documents:
+.build
 *.dvi
 *.xdv
 *-converted-to.*

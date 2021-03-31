@@ -5,19 +5,18 @@
 
 SHELL := /bin/bash
 
-MAINFILE = make/book.tex
+MAINFILE = .build/book.tex
 
 .PHONY: all
 all: _book
-	export TEXINPUTS=lib/templates/dnd/:
-	rubber --pdf $(MAINFILE)
+	TEXINPUTS=lib/templates/dnd/: rubber --pdf $(MAINFILE)
 
 .PHONY: setup
 setup:
 	git submodule update --init --recursive
 
 _book: book.tex
-	mkdir -p make
+	mkdir -p .build
 	-rm -f $(MAINFILE)
 	@set -m; while read -r b; 														\
 	do                                												\
