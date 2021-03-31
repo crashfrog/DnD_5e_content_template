@@ -15,9 +15,9 @@ MAINFILE = book
 EXTRA_FILES := $(shell echo "images/*") 
 
 ## Inner workings
-OBJECTS = $(shell echo *.tex)
-STYLES = $(shell echo *.sty)
-BIB = $(shell echo *.bib)
+OBJECTS = $(shell echo **.tex)
+STYLES = $(shell echo **.sty)
+BIB = $(shell echo **.bib)
 
 OBJECTS_TEST = $(addsuffix .t, $(basename $(OBJECTS)))
 STYLES_TEST = $(addsuffix .s, $(basename $(STYLES)))
@@ -32,7 +32,7 @@ $(MAINFILE).dvi: $(TESTS) $(EXTRA_FILES)
 	latex $(MAINFILE)
 	latex $(MAINFILE)
 
-$(MAINFILE).pdf: $(TESTS) $(EXTRA_FILES) export TEXINPUTS=./lib/templates//
+$(MAINFILE).pdf: $(TESTS) $(EXTRA_FILES)
 	pdflatex $(MAINFILE)
 	pdflatex $(MAINFILE)
 
@@ -68,13 +68,9 @@ cleanall: clean
 	-rm -f *.dvi
 	-rm -rf ./make
 
-NUM:=$(shell printf "%02d\n" $(ls ./chapters | wc -l ))
-
-chapters/chapter_%:
-	mkdir -p chapters/chapter_${NUM}
-
-chapter_*.tex: chapters/chapter_%
-	cp lib/templates/chapter.tex $</$@
+num:=$(shell printf "%02d\n" $$(ls ./chapters | wc -l ))
 
 .PHONY: chapter
-chapter: chapters/chapter_$(NUM)/chapter_$(NUM).tex
+chapter: 
+	mkdir -p chapters/chapter_${num}
+	cp lib/templates/chapter.tex chapters/chapter_${num}/chapter_${num}.tex
