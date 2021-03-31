@@ -1,6 +1,44 @@
 \documentclass[10pt,twoside,twocolumn,openany,nodeprecatedcode]{dndbook}
 
-\usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
+\usepackage[singlelinecheck=false]{caption}
+\usepackage{lipsum}
+\usepackage{listings}
+\usepackage{shortvrb}
+\usepackage{stfloats}
+
+\captionsetup[table]{labelformat=empty,font={sf,sc,bf,},skip=0pt}
+
+\MakeShortVerb{|}
+
+\lstset{%
+  basicstyle=\ttfamily,
+  language=[LaTeX]{TeX},
+  breaklines=true,
+}
+
+\title{ A New 5e Project \\
+\large Written and developed in \LaTeX{} }
+\author{You and your friends!}
+\date{1974/01/30}
 
 \begin{document}
+
+\maketitle
+
+\frontmatter
+
+\tableofcontents
+
+\mainmatter
+
+\include{chapter_00/intro}
+
+
+% % %              LEAVE THIS LINE IN PLACE               % % %
+% % %   This marker is where chapters will be included.   % % %
+
+
+\backmatter
+
+\end{document}

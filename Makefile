@@ -73,4 +73,5 @@ num:=$(shell printf "%02d\n" $$(ls ./chapters | wc -l ))
 .PHONY: chapter
 chapter: 
 	mkdir -p chapters/chapter_${num}
-	cp lib/templates/chapter.tex chapters/chapter_${num}/chapter_${num}.tex
+	cp lib/templates/chapter.template chapters/chapter_${num}/chapter_${num}.tex
+	echo "${num}}" >> chapters/chapter_${num}/chapter_${num}.tex
