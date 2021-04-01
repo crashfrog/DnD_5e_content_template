@@ -5,11 +5,13 @@
 
 SHELL := /bin/bash
 
-MAINFILE = .build/book.tex
+MAINFILE = .build/book_complete
 
-.PHONY: all
-all: _book setup
-	TEXINPUTS=lib/templates/dnd/: rubber --pdf $(MAINFILE)
+.PHONY: book
+book: _book setup
+	TEXINPUTS=../lib/templates/dnd/: rubber -v --inplace -I chapters -I lib --pdf $(MAINFILE).tex
+	mkdir -p dist
+	cp $(MAINFILE).pdf dist/book.pdf
 
 .PHONY: setup
 setup:
@@ -17,24 +19,24 @@ setup:
 
 _book: book.tex
 	mkdir -p .build
-	-rm -f $(MAINFILE)
+	-rm -f $(MAINFILE).tex
 	@set -m; while read -r b; 														\
 	do                                												\
 		if [[ $$b != '% % %  '* ]] ;                 								\
 		then 																		\
-			echo "$$b" >> $(MAINFILE)  ;        									\
+			echo "$$b" >> $(MAINFILE).tex  ;        									\
 		else 																		\
 			for f in $$(find chapters -iname 'chapter_*.tex' | sed 's/.tex//') ; 	\
 			do 																		\
-				echo "\include{$$f}" >> $(MAINFILE) ; 								\
+				echo "\input{../$$f}" >> $(MAINFILE).tex ; 								\
 			done ; 																	\
 		fi ;                                         								\
 	done <book.tex
 			
-watch:  ## Recompile on updates to the source file
-    @while [ 1 ]; do; inotifywait $(PAPER); sleep 0.01; make all; done
-    # for Bash users, replace the while loop with the following
-    # @while true; do; inotifywait $(PAPER); sleep 0.01; make all; done
+# watch:  ## Recompile on updates to the source file
+#     # @while [ 1 ]; do; inotifywait $(PAPER); sleep 0.01; make all; done
+#     # for Bash users, replace the while loop with the following
+#     @while true; do; inotifywait $(PAPER); sleep 0.01; make all; done
 
 
 .PHONY: clean
@@ -46,15 +48,14 @@ clean:
 	-rm -f *.bbl
 	-rm -f *.blg
 	-rm -f *.out
-	-rm -f make/bib
-	-rm -f $(MAINFILE)
+	-rm -rf ./.build
 
 .PHONY: cleanall
 cleanall: clean
 	-rm -f *.pdf
 	-rm -f *.ps
 	-rm -f *.dvi
-	-rm -rf ./make
+	-rm -rf dist
 
 num:=$(shell printf "%02d\n" $$(ls ./chapters | wc -l ))
 
@@ -62,4 +63,4 @@ num:=$(shell printf "%02d\n" $$(ls ./chapters | wc -l ))
 chapter: 
 	mkdir -p chapters/chapter_${num}
 	cp lib/templates/chapter.template chapters/chapter_${num}/chapter_${num}.tex
-	echo "${num}}" >> chapters/chapter_${num}/chapter_${num}.tex
+	-echo "${num}}" >> chapters/chapter_${num}/chapter_${num}.tex
