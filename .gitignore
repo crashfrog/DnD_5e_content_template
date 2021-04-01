@@ -14,6 +14,8 @@
 
 ## Intermediate documents:
 .build
+dist
+dist/*
 *.dvi
 *.xdv
 *-converted-to.*

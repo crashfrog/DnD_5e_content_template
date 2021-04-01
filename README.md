@@ -36,5 +36,4 @@ Don't really know, yet. Run it in Ubuntu for Windows.
 `make chapter` - create a new directory in `chapters` with the chapter template (`lib/templates/chapter.template`.)  
 `make clean` - clean up build files.  
 `make cleanall` - clean up build files and generated output files.  
-`make` - compile the book into a formatted PDF.  
-`make watch` - watch for changes to the .tex files and recompile on save. Only works with `inotify-tools` (GNU/Linux.)
+`make book` - compile the book into a formatted PDF (`dist/book.pdf`.)
