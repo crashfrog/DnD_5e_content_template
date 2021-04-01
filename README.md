@@ -36,7 +36,7 @@ You can use the `Makefile` to create new chapters with the chapter template: `ma
 
 ### MacOS
 ```
-    brew install make texlive
+    brew install make texlive # I think?
 ```
 
 ### Windows
